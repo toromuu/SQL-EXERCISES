@@ -1,0 +1,81 @@
+SIN ÍNDICE
+Plan hash value: 3157461454
+ 
+------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation                           | Name             | Rows  | Bytes | Cost (%CPU)| Time     | Pstart| Pstop |
+------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                    |                  |     1 |    72 |     4   (0)| 00:00:01 |       |       |
+|   1 |  NESTED LOOPS                       |                  |       |       |            |          |       |       |
+|   2 |   NESTED LOOPS                      |                  |     1 |    72 |     4   (0)| 00:00:01 |       |       |
+|   3 |    NESTED LOOPS                     |                  |     1 |    28 |     3   (0)| 00:00:01 |       |       |
+|   4 |     TABLE ACCESS BY INDEX ROWID     | ABD05_TRADUCCION |     1 |    18 |     2   (0)| 00:00:01 |       |       |
+|*  5 |      INDEX RANGE SCAN               | TRADUCCION_ANYO  |     1 |       |     1   (0)| 00:00:01 |       |       |
+|*  6 |     TABLE ACCESS CLUSTER            | ABD05_LIBRO      |     1 |    10 |     1   (0)| 00:00:01 |       |       |
+|*  7 |    INDEX UNIQUE SCAN                | TRADUCTOR_PK     |     1 |       |     0   (0)| 00:00:01 |       |       |
+|*  8 |   TABLE ACCESS BY GLOBAL INDEX ROWID| ABD05_TRADUCTOR  |     1 |    44 |     1   (0)| 00:00:01 | ROWID | ROWID |
+------------------------------------------------------------------------------------------------------------------------
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   5 - access(EXTRACT(YEAR FROM INTERNAL_FUNCTION("ANYO"))=2019)
+   6 - filter("L"."GENERO"='épico' AND "L"."IDLIBRO"="TRA"."LIBRO")
+   7 - access("T"."DNI"="TRA"."TRADUCTOR")
+   8 - filter("T"."IDIOMA"='inglés' OR "T"."IDIOMA"='italiano')
+
+
+
+CON ÍNDICE sin reducir el costo
+Plan hash value: 3157461454
+ 
+------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation                           | Name             | Rows  | Bytes | Cost (%CPU)| Time     | Pstart| Pstop |
+------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                    |                  |     1 |    72 |     4   (0)| 00:00:01 |       |       |
+|   1 |  NESTED LOOPS                       |                  |       |       |            |          |       |       |
+|   2 |   NESTED LOOPS                      |                  |     1 |    72 |     4   (0)| 00:00:01 |       |       |
+|   3 |    NESTED LOOPS                     |                  |     1 |    28 |     3   (0)| 00:00:01 |       |       |
+|   4 |     TABLE ACCESS BY INDEX ROWID     | ABD05_TRADUCCION |     1 |    18 |     2   (0)| 00:00:01 |       |       |
+|*  5 |      INDEX RANGE SCAN               | TRADUCCION_ANYO  |     1 |       |     1   (0)| 00:00:01 |       |       |
+|*  6 |     TABLE ACCESS CLUSTER            | ABD05_LIBRO      |     1 |    10 |     1   (0)| 00:00:01 |       |       |
+|*  7 |    INDEX UNIQUE SCAN                | TRADUCTOR_PK     |     1 |       |     0   (0)| 00:00:01 |       |       |
+|*  8 |   TABLE ACCESS BY GLOBAL INDEX ROWID| ABD05_TRADUCTOR  |     1 |    44 |     1   (0)| 00:00:01 | ROWID | ROWID |
+------------------------------------------------------------------------------------------------------------------------
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   5 - access(EXTRACT(YEAR FROM INTERNAL_FUNCTION("ANYO"))=2019)
+   6 - filter("L"."GENERO"='épico' AND "L"."IDLIBRO"="TRA"."LIBRO")
+   7 - access("T"."DNI"="TRA"."TRADUCTOR")
+   8 - filter("T"."IDIOMA"='inglés' OR "T"."IDIOMA"='italiano')
+
+
+
+
+CON ÍNDICE reduciendo el costo a la mitad
+Plan hash value: 3108981810
+ 
+------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation                           | Name             | Rows  | Bytes | Cost (%CPU)| Time     | Pstart| Pstop |
+------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                    |                  |     1 |    72 |     3   (0)| 00:00:01 |       |       |
+|   1 |  NESTED LOOPS                       |                  |       |       |            |          |       |       |
+|   2 |   NESTED LOOPS                      |                  |     1 |    72 |     3   (0)| 00:00:01 |       |       |
+|   3 |    NESTED LOOPS                     |                  |     1 |    28 |     2   (0)| 00:00:01 |       |       |
+|   4 |     TABLE ACCESS BY INDEX ROWID     | ABD05_TRADUCCION |     1 |    18 |     1   (0)| 00:00:01 |       |       |
+|*  5 |      INDEX RANGE SCAN               | TRADUCCION_ANYO  |     1 |       |     1   (0)| 00:00:01 |       |       |
+|*  6 |     TABLE ACCESS BY INDEX ROWID     | ABD05_LIBRO      |     1 |    10 |     1   (0)| 00:00:01 |       |       |
+|*  7 |      INDEX UNIQUE SCAN              | LIBRO_PK         |     1 |       |     1   (0)| 00:00:01 |       |       |
+|*  8 |    INDEX UNIQUE SCAN                | TRADUCTOR_PK     |     1 |       |     1   (0)| 00:00:01 |       |       |
+|*  9 |   TABLE ACCESS BY GLOBAL INDEX ROWID| ABD05_TRADUCTOR  |     1 |    44 |     1   (0)| 00:00:01 | ROWID | ROWID |
+------------------------------------------------------------------------------------------------------------------------
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   5 - access(EXTRACT(YEAR FROM INTERNAL_FUNCTION("ANYO"))=2019)
+   6 - filter("L"."GENERO"='épico')
+   7 - access("L"."IDLIBRO"="TRA"."LIBRO")
+   8 - access("T"."DNI"="TRA"."TRADUCTOR")
+   9 - filter("T"."IDIOMA"='inglés' OR "T"."IDIOMA"='italiano')
